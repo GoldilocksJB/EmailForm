@@ -16,7 +16,7 @@ body {
     flex-direction: column;
     border-radius: 8px;
 }
-.upperContainer {
+.headerContainer {
     height: 204px;
     background: #F8F8F7;
     border-radius: 8px;
@@ -48,7 +48,7 @@ input {
         line-height: 24px;
     }
 }
-.lowerContainer {
+.buttonsContainer {
     background-color: #FFFFFF;
     height: 96px;
     padding: 24px 50px;

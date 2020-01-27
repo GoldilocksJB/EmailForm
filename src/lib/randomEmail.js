@@ -1,38 +1,31 @@
-class RandomEmail {
-
-    constructor() {
-        this.min = 3;
-        this.max = 0;
-    }
-
-    setStringLength(max) {
-        this.max = max;
-        return Math.random() * (this.max - this.min) + this.min;
-    }
-
-    setString(length) {
+const RandomEmail = {
+    min: 3,
+    max: 0,
+    setStringLength: (max) => {
+        RandomEmail.max = max;
+        return Math.random() * (RandomEmail.max - RandomEmail.min) + RandomEmail.min;
+    },
+    setString: (length) => {
         let string = '';
         for (let i = 0; i < length; i++) {
             var char = Math.random().toString(36).substring(11);
             string = string + char;
         }
-        if (string.length > this.max) {
-            let diff = string.length - this.max;
+        if (string.length > RandomEmail.max) {
+            let diff = string.length - RandomEmail.max;
             return string.substring(diff);
         }
         return string;
-    }
-
-    generate() {
-        let usernameLength = this.setStringLength(12);
-        let username = this.setString(usernameLength);
-        let subdomainLength = this.setStringLength(4);
-        let subdomain = this.setString(subdomainLength);
+    },
+    generate: () => {
+        let usernameLength = RandomEmail.setStringLength(12);
+        let username = RandomEmail.setString(usernameLength);
+        let subdomainLength = RandomEmail.setStringLength(4);
+        let subdomain = RandomEmail.setString(subdomainLength);
 
         let newEmail = `${username}@${subdomain}.ru`
         return newEmail;
     }
-
 }
 
 export default RandomEmail;

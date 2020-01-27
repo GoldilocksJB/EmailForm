@@ -1,27 +1,30 @@
-import RandomEmail from './randomEmail.js';
 import Cross from './cross.js';
+import ButtonsContainer from './buttonsContainer/buttonsContainer.js';
+
+const REG_EXP = /^[a-z0-9._+-]+@[a-z0-9.-]+\.[a-z]{2,64}/i;
 
 const FormEmail = {
-    current: this,
     emails: [],
-    toListen: [],
     currentEmptyEmail: null,
-    regExp: /^[a-z0-9._+-]+@[a-z0-9.-]+\.[a-z]{2,64}/i,
     root: null,
     listener: () => {},
-    //to trigger listener
-    set email(newValue) {
-        this.toListen = newValue,
-        this.listener(newValue);
+    setEmailsList: (newValue) => {
+        FormEmail.emails = newValue;
+        FormEmail.listener(newValue);
     },
-    get email() {
-        return this.toListen;
-    },
-    //to set callback on emails list changes
+    /**
+     * set callback on emails list changes
+     * @param {function} callback - callback-method
+    */
     defineListener: (listener) => {
         FormEmail.listener = listener;
     },
-    generateNewInput: (root, value) => {
+    /**
+     * generate new input
+     * @param {string} value - input value
+     * @param {object} root - DOM element (input container)
+    */
+    generateNewInput: (value, root) => {
         if (!FormEmail.root) FormEmail.root = root;
     
         let newEmail;
@@ -40,9 +43,13 @@ const FormEmail = {
         }
         newEmail.addEventListener('keypress', (event) => handleKeyPress(event, newEmail));
         newEmail.addEventListener('blur', (event) => handleBlur(event));
+        newEmail.addEventListener('paste', (event) => handlePaste(event));
     },
+    /**
+     * email validation
+     * @param {object} element - DOM element (input)
+    */
     checkEmailValue: (element) => {
-        //value can contain space, it should be deleted
         let valueStr = element.value.replace(/\s/g, '');
         //check if value contain several emails
         if (valueStr.indexOf(',') !== -1) {
@@ -51,28 +58,30 @@ const FormEmail = {
             element.value = emailsArr[0];
             FormEmail.createEmail(element);
             //and the others need new inputs - delete first value
-            emailsArr.shift();
-            emailsArr.map(email => FormEmail.generateNewInput(FormEmail.root, email));
+            emailsArr.shift().map(email => FormEmail.generateNewInput(email, FormEmail.root));
             return;
-        //there is no need to split emails - creating email
         } else {
             element.value = valueStr;
             FormEmail.createEmail(element);
         }
-        FormEmail.generateNewInput(FormEmail.root);
+        FormEmail.generateNewInput(null, FormEmail.root);
     },
-    //create single email (correct or not)
+    /**
+     * create single email (correct or not)
+     * @param {object} element - DOM element (input)
+    */
     createEmail: (element) => {
-        let isValid = FormEmail.regExp.test(element.value) ? true : false;
+        let isValid = REG_EXP.test(element.value) ? true : false;
         let fakeInput = document.createElement('span');
         fakeInput.innerHTML = element.value;
 
         element.parentNode.appendChild(fakeInput);
         element.style.display = 'none';
         if (isValid) {
-            FormEmail.emails.push(element.value);
+            let newEmailsList = FormEmail.emails;
+            newEmailsList.push(element.value)
+            FormEmail.setEmailsList(newEmailsList);
             //to check if emails list changes
-            FormEmail.email = FormEmail.emails;
 
             element.parentNode.setAttribute('class', 'inputValid');
             fakeInput.setAttribute('class', 'fakeInputValid');
@@ -80,75 +89,66 @@ const FormEmail = {
             element.parentNode.setAttribute('class', 'inputInvalid');
             fakeInput.setAttribute('class', 'fakeInputInvalid');
         }
-        //generating X with parent input and correct or incorrect param
-        const newCross = new Cross();
-        newCross.generate(element, isValid, callbackDelete);
+        Cross.generate(element, isValid, callbackDelete);
 
         FormEmail.currentEmptyEmail = null;
     },
-    //set main HTML-structure of email editor
+    /**
+     * set main HTML-structure of email editor
+     * @param {object} root - DOM element (form container)
+    */
     generate: (root) => {
-        //main form container
-        let container = document.createElement('div');
-        container.setAttribute('class','formContainer');
+        let formContainer = document.createElement('div');
+        formContainer.setAttribute('class','formContainer');
     
-        //upper container (with header and input's container)
-        let upperContainer = document.createElement('div');
-        upperContainer.setAttribute('class','upperContainer');
-        container.append(upperContainer);
+        let headerContainer = document.createElement('div');
+        headerContainer.setAttribute('class','headerContainer');
+        formContainer.append(headerContainer);
     
-        //create header
         let header = document.createElement('div');
         header.setAttribute('class', 'header');
         header.innerHTML = "Share <strong>Board name</strong> with others";
-        upperContainer.append(header);
+        headerContainer.append(header);
     
-        //create email input's container
         let inputContainer = document.createElement('div');
         inputContainer.setAttribute('class', 'inputContainer');
-        upperContainer.append(inputContainer);
+        headerContainer.append(inputContainer);
     
         //create class with emails and generate first email input
-        FormEmail.generateNewInput(inputContainer);
+        FormEmail.generateNewInput(null, inputContainer);
     
-        //create lower container (for the buttons)
-        let lowerContainer = document.createElement('div');
-        lowerContainer.setAttribute('class','lowerContainer');
-        container.append(lowerContainer);
+        let buttonsContainer = ButtonsContainer.generateButtonContainer({emails: FormEmail.emails, newInputCallback: FormEmail.generateNewInput});
+        formContainer.append(buttonsContainer);
     
-        //create Button "Add email"
-        let addEmailButton = document.createElement('button');
-        addEmailButton.setAttribute('class','clickButton');
-        addEmailButton.onclick = () => {
-            let randEm = new RandomEmail();
-            FormEmail.generateNewInput(null, randEm.generate());
-        };
-        addEmailButton.innerHTML = 'Add email';
-        lowerContainer.append(addEmailButton);
-    
-        //create Button "Get emails count"
-        let countEmailButton = document.createElement('button');
-        countEmailButton.setAttribute('class','clickButton');
-        countEmailButton.onclick = () => {
-            getEmails(FormEmail.emails);
-        };
-        countEmailButton.innerHTML = 'Get emails count';
-        lowerContainer.append(countEmailButton);
-    
-        root.appendChild(container);
+        root.appendChild(formContainer);
     },
-    //set firing callback in setter
+    /**
+     * set firing callback in setter
+     * @param {function} callback - callback
+    */
     subscribeEmailChanges: (callback) => {
         FormEmail.defineListener(callback);
     },
+    setNewEmailList: (value) => {
+        if (value.isArray()) {
+            let emailsString = value.join(',');
+            FormEmail.currentEmptyEmail = emailsString;
+            FormEmail.checkEmailValue(FormEmail.currentEmptyEmail);
+            FormEmail.setEmailsList(value);
+        } else {
+            FormEmail.currentEmptyEmail = value;
+            FormEmail.checkEmailValue(FormEmail.currentEmptyEmail);
+            let emailArr = value.split(',');
+            FormEmail.setEmailsList(emailArr);
+        }
+    }
 };
 
-//to delete emails from attribute emails 
+//to delete emails from attribute emails
 const callbackDelete = (value) => {
     let emailToDelete = FormEmail.emails.indexOf(value);
     FormEmail.emails.splice(emailToDelete, 1);
-    //to check if emails list changes
-    FormEmail.email = FormEmail.emails;
+    FormEmail.setEmailsList(FormEmail.emails);
 }
 
 const handleKeyPress = (event) => {
@@ -164,10 +164,13 @@ const handleBlur = (event) => {
         FormEmail.checkEmailValue(event.target)
     };
 };
-
-//action for the button "Get emails count"
-const getEmails = (emailObject) => {
-    alert(`Valid emails: ${emailObject.length}`);
+const handlePaste = (event) => {
+    let data = event.clipboardData.getData('text');
+    if (data.length > 0) {
+        if (event.target.style.display === 'none') return;
+        event.target.value = data
+        FormEmail.checkEmailValue(event.target);
+    }
 }
 
 //set HTML-structure of nex input

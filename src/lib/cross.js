@@ -1,26 +1,20 @@
-class Cross {
-    constructor() {
-        this.parentInput = null;
-        this.isValid = true;
-    }
-
-    deleteEmail() {
-        this.parentInput.parentElement.removeChild(this.parentInput);
-    }
-
-    generate(element, isValid, callbackDelete) {
-        this.parentInput = element.parentElement;
-        this.isValid = isValid;
+const Cross  = {
+    deleteEmail: (parentInput) => {
+        console.log('Cross.parentInput', parentInput)
+        console.log('Cross.parentInput.parentElement', parentInput.parentElement)
+        parentInput.parentElement.removeChild(parentInput);
+    },
+    generate: (element, isValid, callbackDelete) => {
+        Cross.parentInput = element.parentElement;
 
         let crossElement = document.createElement('span');
-        //color of X depends of correct input's value
         crossElement.setAttribute('class', isValid ? 'closeValid' : 'closeInvalid' );
 
         crossElement.addEventListener('click', () => {
-            this.deleteEmail();
+            Cross.deleteEmail(element.parentElement);
             callbackDelete(element.value);
         });
-        this.parentInput.append(crossElement);
+        element.parentElement.append(crossElement);
     }
 }
 

@@ -1,4 +1,4 @@
-import FormEmail from './emails-editor.js';
+import FormEmail from './formEmail.js';
 
 export class EmailsEditor {
 
@@ -31,10 +31,11 @@ export class EmailsEditor {
     };
 
     /**
-     * Set new email (single or several)
+     * Set new emails list
      * @param {string} email - string with email's value
+     * @param {object} email - or object with email's value
      */
-    setEmails(email) {
-        FormEmail.generateNewInput(null, email);
+    setEmailsList(email) {
+        FormEmail.setNewEmailList(email);
     };
 }
