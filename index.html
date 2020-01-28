@@ -3,11 +3,11 @@
     <head>
         <meta charset="UTF-8">
         <title>Try out emails editor!</title>
-        <link rel="stylesheet" type="text/scss" href="./src/css/styles.css">
+        <link rel="stylesheet" type="text/scss" href="./dist/style.css">
     </head>
     <body>
         <div id="emails-editor" style="width:540px;height:300px;"></div>
-        <script src='./src/index.js' type="module">
+        <script src='./dist/bundle.js'>
             document.addEventListener('DOMContentLoaded', function() {
                 let elem = document.getElementById('emails-editor');
                 let instance = new EmailsEditor(elem);
