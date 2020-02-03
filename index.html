@@ -3,17 +3,19 @@
     <head>
         <meta charset="UTF-8">
         <title>Try out emails editor!</title>
-        <link rel="stylesheet" type="text/scss" href="./dist/style.css">
     </head>
     <body>
-        <div id="emails-editor" style="width:540px;height:300px;"></div>
-        <script src='./dist/bundle.js'>
-            console.log('yah')
+        <div id="emails-editor-first" style="width:540px;height:300px;margin-bottom:50px;"></div>
+        <div id="emails-editor-second" style="width:540px;height:300px;"></div>
+        <script src='./bundle.js' type="module">
             document.addEventListener('DOMContentLoaded', function() {
-                console.log('wohoooo')
-                let elem = document.getElementById('emails-editor');
-                let instance = new EmailsEditor(elem);
-                instance.initEmailsEditor();
+                let rootDivFirst = document.getElementById('emails-editor-first');
+                let rootDivSecond = document.getElementById('emails-editor-second');
+
+                let instanceFirst = new EmailsEditor(rootDivFirst);
+                let instanceSecond = new EmailsEditor(rootDivSecond);
+                instanceFirst.initEmailsEditor();
+                instanceSecond.initEmailsEditor();
             })
         </script>
     </body>
