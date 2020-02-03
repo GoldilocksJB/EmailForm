@@ -7,9 +7,7 @@
     <body>
         <div id="emails-editor" style="width:540px;height:300px;"></div>
         <script src='./bundle.js' type="module">
-            console.log('yah')
             document.addEventListener('DOMContentLoaded', function() {
-                console.log('wohoooo')
                 let elem = document.getElementById('emails-editor');
                 let instance = new EmailsEditor(elem);
                 instance.initEmailsEditor();
