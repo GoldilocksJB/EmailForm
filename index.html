@@ -6,12 +6,12 @@
     </head>
     <body>
         <div id="emails-editor" style="width:540px;height:300px;"></div>
-        <script src="./bundle.js" type="module">
+        <script>
             document.addEventListener('DOMContentLoaded', function() {
                 let elem = document.getElementById('emails-editor');
                 let instance = new EmailsEditor(elem);
                 instance.initEmailsEditor();
             })
         </script>
-    </body>
+    <script type="text/javascript" src="bundle.js"></script></body>
 </html lang="en">
