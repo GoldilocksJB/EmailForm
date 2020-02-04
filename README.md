@@ -1,9 +1,11 @@
 # Emails editor
 
+[GitHub page](https://goldilocksjb.github.io/EmailForm/)
+
 Emails editor library represents the form that helps users to manage with entered email addresses.
 
 ## Usage:
-To use library in your project you need to create *div* element with *id='emails-editor'* and import EmailsEditor like this (in HTML)
+To use library in your project you need to create *div* container for the form and import EmailsEditor like this (in HTML)
 ```html
 <div id="emails-editor" style="width:540px;height:300px;"></div>
     <script>
@@ -23,16 +25,16 @@ let emailForm = new EmailsEditor(elem);
 emailForm.initEmailsEditor();
 ```
 
-## Form buttons
-**Add email** - add a random valid email to the list;
-
-**Get emails count** - show an alert with valid emails count.
-
 ## Run build version:
 ```
 $ npm i
 $ npm run dev
 ```
+
+## Form buttons
+**Add email** - add a random valid email to the list;
+
+**Get emails count** - show an alert with valid emails count.
 
 ## API:
 - **initEmailsEditor()**
@@ -61,16 +63,15 @@ emailsList will contain array with strings:
 ["lena4114@mail.ru", "galina2001@yandex.ru", "vova5@gmail.com"]
 ```
 
-- **setEmails(arg)**
+- **setEmailsList(arg)**
 
-
-Set new emails (single or several). Argument - string.
+Set new emails list. Argument - string or array of string.
 ```javascript
 import EmailsEditor from 'emails-editor';
 
 let elem = document.getElementById('emails-editor');
 let emailForm = new EmailsEditor(elem);
-emailForm.setEmails('lena4114@mail.ru, galina2001@yandex.ru, vova5@gmail.com');
+emailForm.setEmailsList('lena4114@mail.ru, galina2001@yandex.ru, vova5@gmail.com');
 ```
 
 - **subscribeEmailsChanges(arg)**
