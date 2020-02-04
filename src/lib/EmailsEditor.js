@@ -4,6 +4,7 @@ export class EmailsEditor {
 
     constructor(rootElem) {
         this.root = rootElem;
+        this.emailForm = new FormEmail();
     }
 
     /**
@@ -11,7 +12,7 @@ export class EmailsEditor {
      * @param {HTMLNode} rootContainer - div container with id='emails-editor'
      */
     initEmailsEditor() {
-        FormEmail.generate(this.root);
+        this.emailForm.generate(this.root);
     }
 
     /**
@@ -19,7 +20,7 @@ export class EmailsEditor {
      * @param {function} callback - callback-method
      */
     subscribeEmailsChanges(callback) {
-        FormEmail.defineListener(callback);
+        this.emailForm.defineListener(callback);
     };
 
     /**
@@ -27,7 +28,7 @@ export class EmailsEditor {
      * @returns {array} - array of string emails
      */
     getEmailsList() {
-        return FormEmail.emails;
+        return this.emailForm.getEmailsList();
     };
 
     /**
@@ -36,6 +37,6 @@ export class EmailsEditor {
      * @param {object} email - or object with email's value
      */
     setEmailsList(email) {
-        FormEmail.setNewEmailList(email);
+        this.emailForm.setNewEmailList(email);
     };
 }
