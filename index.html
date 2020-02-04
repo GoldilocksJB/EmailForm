@@ -4,13 +4,82 @@
         <meta charset="UTF-8">
         <title>Try out emails editor!</title>
     </head>
-    <body>
-        <div id="emails-editor" style="width:540px;height:300px;"></div>
+    <body style="background-color:lightblue;">
+        <div style="margin:0 auto;width:600px;">
+            <div style="margin-bottom: 15px;">
+                <div style="margin: 5px;">1. check API Get emails list (to demonstrate the returning value will be shown in devTools console)</div style="margin-bottom: 15px;">
+                <button id="get-emails-form1" style="display:block;">Get emails list</button>
+                <div style="margin: 5px;">2. check API Set emails list</div style="margin-bottom: 10px;">
+                <input type="text" placeholder="fill email value" id="set-emails-list-1"/>
+                <button id="set-emails-form1">Set emails list</button>
+                <div style="margin: 5px;">3. check API Subscribe to emails list changes (please open devTools console)</div style="margin-bottom: 10px;">
+                <button id="subscribe-changes-form1">Subscribe emails list's changes</button>
+            </div>
+            <div id="emails-editor1" style="width:540px;height:300px;margin-bottom:50px;"></div>
+            <div style="margin-bottom: 15px;">
+                <button id="get-emails-form2" style="display:block;">Get emails list</button>
+                <input type="text" placeholder="fill email value" id="set-emails-list-2"/>
+                <button id="set-emails-form2">Set emails list</button>
+                <button id="subscribe-changes-form2">Subscribe emails list's changes (please open devTools console)</button>
+            </div>
+            <div id="emails-editor2" style="width:540px;height:300px;"></div>
+        </div>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                let elem = document.getElementById('emails-editor');
-                let instance = new EmailsEditor(elem);
-                instance.initEmailsEditor();
+                //First form
+                let elem1 = document.getElementById('emails-editor1');
+                let instance1 = new EmailsEditor(elem1);
+                instance1.initEmailsEditor();
+                //getEmailsList API
+                let buttonGetEmails1 = document.getElementById('get-emails-form1');
+                buttonGetEmails1.onclick = () => {
+                    let emailsList = instance1.getEmailsList();
+                    console.log('getEmailsList form1:', emailsList)
+                    alert(emailsList.join(', '));
+                }
+                //setEmailsList API
+                let buttonSetEmails1 = document.getElementById('set-emails-form1');
+                let inputSetEmails1 = document.getElementById('set-emails-list-1');
+                buttonSetEmails1.onclick = () => {
+                    if (!inputSetEmails1.value) {
+                        alert('Please fill the value first');
+                        return;
+                    }
+                    instance1.setEmailsList(inputSetEmails1.value);
+                }
+                //subscribe changes API
+                let buttonSubscribe1 = document.getElementById('subscribe-changes-form1');
+                buttonSubscribe1.onclick = () => {
+                    instance1.subscribeEmailsChanges(() => console.log('changed!!!'))
+                }
+
+
+                //Second form
+                let elem2 = document.getElementById('emails-editor2');               
+                let instance2 = new EmailsEditor(elem2);
+                instance2.initEmailsEditor();
+                //getEmailsList API
+                let buttonGetEmails2 = document.getElementById('get-emails-form2');
+                buttonGetEmails2.onclick = () => {
+                    let emailsList = instance2.getEmailsList();
+                    console.log('getEmailsList form2:', emailsList)
+                    alert(emailsList.join(', '));
+                }
+                //setEmailsList API
+                let buttonSetEmails2 = document.getElementById('set-emails-form2');
+                let inputSetEmails2 = document.getElementById('set-emails-list-2');
+                buttonSetEmails2.onclick = () => {
+                    if (!inputSetEmails2.value) {
+                        alert('Please fill the value first');
+                        return;
+                    }
+                    instance2.setEmailsList(inputSetEmails2.value);
+                }
+                //subscribe changes API
+                let buttonSubscribe2 = document.getElementById('subscribe-changes-form2');
+                buttonSubscribe2.onclick = () => {
+                    instance2.subscribeEmailsChanges(() => console.log('changed!!!'))
+                }
             })
         </script>
     <script type="text/javascript" src="bundle.js"></script></body>
